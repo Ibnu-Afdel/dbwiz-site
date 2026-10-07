@@ -1,0 +1,26 @@
+---
+// A real DBWiz screenshot (rendered from the terminal with freeze), served as
+// responsive AVIF/WebP by Astro's image pipeline.
+import { Picture } from "astro:assets";
+import { shots } from "../lib/content";
+
+interface Props {
+  shot: keyof typeof shots;
+  alt: string;
+  sizes: string;
+  eager?: boolean;
+  class?: string;
+}
+const { shot, alt, sizes, eager = false, class: className = "" } = Astro.props;
+---
+
+<Picture
+  src={shots[shot]}
+  alt={alt}
+  formats={["avif", "webp"]}
+  widths={[640, 960, 1280, 1800, 2400]}
+  sizes={sizes}
+  loading={eager ? "eager" : "lazy"}
+  fetchpriority={eager ? "high" : undefined}
+  class:list={["block h-auto w-full rounded-[var(--radius-box)] border border-line bg-[#16161e]", className]}
+/>

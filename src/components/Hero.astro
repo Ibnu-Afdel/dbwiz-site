@@ -1,0 +1,36 @@
+---
+// Headline across the top, the install command beside it, then the real UI at
+// full width so the screenshot's text is legible rather than a thumbnail.
+import { Icon } from "astro-icon/components";
+import Command from "./Command.astro";
+import Shot from "./Shot.astro";
+import { section, inline } from "../lib/content";
+
+const hero = await section("hero");
+---
+
+<section id="top" class="mx-auto max-w-6xl px-4 pt-14 pb-20 sm:px-6 md:pt-20 lg:pb-28">
+  <div class="grid grid-cols-[minmax(0,1fr)] items-end gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+    <h1 class="enter text-4xl leading-[1.04] font-semibold tracking-tighter text-balance sm:text-5xl lg:text-6xl" style="--i:0">
+      {hero.title}
+    </h1>
+    <div class="enter space-y-5" style="--i:1">
+      <p class="prose-inline max-w-[46ch] text-lg leading-relaxed text-muted" set:html={inline(hero.subtitle)} />
+      <Command command={hero.command} />
+      <a href={hero.secondary.href} class="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-fg">
+        {hero.secondary.label}
+        <Icon name="ph:arrow-up-right" class="size-3.5" aria-hidden="true" />
+      </a>
+    </div>
+  </div>
+
+  <div class="enter mt-12 md:mt-16" style="--i:2">
+    <Shot
+      shot={hero.shot}
+      alt={hero.shot_alt}
+      eager
+      sizes="(min-width: 1152px) 1104px, 100vw"
+      class="shadow-screen"
+    />
+  </div>
+</section>

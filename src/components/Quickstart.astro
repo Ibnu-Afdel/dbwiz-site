@@ -1,0 +1,21 @@
+---
+import { section, inline } from "../lib/content";
+
+const q = await section("quickstart");
+---
+
+<section class="border-t border-line/70">
+  <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6 md:py-28">
+    <h2 class="reveal text-3xl leading-tight font-semibold tracking-tight md:text-4xl">{q.title}</h2>
+    <ol class="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+      {
+        q.steps.map((s) => (
+          <li class="reveal lg:border-l lg:border-line lg:px-7 lg:first:border-l-0 lg:first:pl-0">
+            <h3 class="text-2xl font-semibold tracking-tight">{s.verb}</h3>
+            <p class="prose-inline mt-3 leading-relaxed text-muted" set:html={inline(s.body)} />
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

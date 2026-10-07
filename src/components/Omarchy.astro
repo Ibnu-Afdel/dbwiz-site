@@ -1,0 +1,32 @@
+---
+import { Icon } from "astro-icon/components";
+import { section, inline } from "../lib/content";
+
+const o = await section("omarchy");
+---
+
+<section id="omarchy" class="border-y border-line/70 bg-surface/60">
+  <div class="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 md:py-28 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-16">
+    <div class="reveal">
+      <h2 class="text-3xl leading-tight font-semibold tracking-tight md:text-4xl">{o.title}</h2>
+      <p class="mt-4 text-lg text-muted">{o.subtitle}</p>
+      <a href={o.link.href} class="mt-6 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
+        {o.link.label}
+        <Icon name="ph:arrow-up-right" class="size-3.5" aria-hidden="true" />
+      </a>
+    </div>
+    <ul class="grid gap-x-10 gap-y-10 sm:grid-cols-2">
+      {
+        o.points.map((p) => (
+          <li class="reveal">
+            <span class="grid size-10 place-items-center rounded-[var(--radius-control)] border border-line bg-bg text-accent">
+              <Icon name={p.icon} class="size-5" aria-hidden="true" />
+            </span>
+            <h3 class="mt-4 font-semibold">{p.title}</h3>
+            <p class="prose-inline mt-2 leading-relaxed text-muted" set:html={inline(p.body)} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

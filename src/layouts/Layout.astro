@@ -1,0 +1,48 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const site = "https://dbwiz.ibnuafdel.com";
+const {
+  title = "DBWiz: your local databases, one keypress away",
+  description = "A friendly terminal UI that finds the PostgreSQL, MySQL, MariaDB, and SQLite databases on your Linux machine and lets you browse, edit, and query them. Zero config. Built in for Omarchy.",
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL("/og.png", site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0e0f15" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f7fb" media="(prefers-color-scheme: light)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DBWiz" />
+    <meta property="og:title" content="DBWiz" />
+    <meta property="og:description" content="Find, browse, and query your local SQL databases from the terminal. No container names, no docker exec, no config." />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="DBWiz running a SQL query in the terminal" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="min-h-[100dvh]">
+    <slot />
+  </body>
+</html>

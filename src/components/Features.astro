@@ -1,0 +1,78 @@
+---
+// Bento of the headline features. Cells are sized by their content: screenshot
+// cells take two columns (or the full row) so the real UI is legible; text cells
+// take one. Rows run 2+1, full, 1+2, so the grid never settles into equal cards.
+import { Icon } from "astro-icon/components";
+import Shot from "./Shot.astro";
+import { section, inline } from "../lib/content";
+
+const features = await section("features");
+const span = { narrow: "lg:col-span-1", wide: "lg:col-span-2", full: "lg:col-span-3" } as const;
+---
+
+<section id="features" class="mx-auto max-w-6xl px-4 py-24 sm:px-6 md:py-28">
+  <h2 class="reveal max-w-2xl text-3xl leading-tight font-semibold tracking-tight text-balance md:text-4xl">
+    {features.title}
+  </h2>
+
+  <div class="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-3">
+    {
+      features.cells.map((cell, i) => {
+        const accentTint = !cell.shot && i % 2 === 1;
+        if (cell.span === "full" && cell.shot) {
+          return (
+            <article class="reveal grid overflow-hidden rounded-[var(--radius-box)] border border-line bg-surface lg:col-span-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+              <div class="p-7 md:p-9 lg:self-center">
+                <Icon name={cell.icon} class="size-6 text-accent" aria-hidden="true" />
+                <h3 class="mt-4 text-xl font-semibold tracking-tight">{cell.title}</h3>
+                <p class="prose-inline mt-3 max-w-[38ch] leading-relaxed text-muted" set:html={inline(cell.body)} />
+              </div>
+              <div class="px-5 pb-5 lg:py-6 lg:pr-6 lg:pl-0">
+                <Shot shot={cell.shot} alt={cell.shot_alt ?? ""} sizes="(min-width: 1024px) 720px, 100vw" />
+              </div>
+            </article>
+          );
+        }
+        return (
+          <article
+            class:list={[
+              "reveal flex flex-col overflow-hidden rounded-[var(--radius-box)] border border-line",
+              span[cell.span],
+              accentTint ? "bg-[color-mix(in_srgb,var(--accent)_9%,var(--surface))]" : "bg-surface",
+            ]}
+          >
+            <div class="p-7 md:p-8">
+              <Icon name={cell.icon} class="size-6 text-accent" aria-hidden="true" />
+              <h3 class="mt-4 text-xl font-semibold tracking-tight">{cell.title}</h3>
+              <p class="prose-inline mt-3 max-w-[52ch] leading-relaxed text-muted" set:html={inline(cell.body)} />
+            </div>
+            {cell.shot && (
+              <div class="mt-auto h-56 overflow-hidden pl-7 md:h-64 md:pl-8">
+                <Shot
+                  shot={cell.shot}
+                  alt={cell.shot_alt ?? ""}
+                  sizes="(min-width: 1024px) 900px, 140vw"
+                  class="w-[150%] max-w-none rounded-r-none rounded-b-none md:w-[125%]"
+                />
+              </div>
+            )}
+          </article>
+        );
+      })
+    }
+  </div>
+
+  <div class="reveal mt-20">
+    <h3 class="text-lg font-semibold tracking-tight">{features.more_title}</h3>
+    <dl class="mt-6 grid gap-x-10 gap-y-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        features.more.map((m) => (
+          <div>
+            <dt class="font-medium">{m.title}</dt>
+            <dd class="prose-inline mt-1.5 text-[0.95rem] leading-relaxed text-muted" set:html={inline(m.body)} />
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

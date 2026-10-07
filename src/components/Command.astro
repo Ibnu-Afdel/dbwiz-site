@@ -1,0 +1,60 @@
+---
+// A shell command with a copy button. The prompt sigil is decoration only, so
+// it is left out of what gets copied.
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  command: string;
+  class?: string;
+}
+const { command, class: className = "" } = Astro.props;
+---
+
+<div
+  class:list={[
+    "group flex items-center gap-3 rounded-[var(--radius-box)] border border-line bg-surface pl-4 pr-1.5 py-1.5 font-mono text-[0.86rem]",
+    className,
+  ]}
+>
+  <span class="select-none text-accent" aria-hidden="true">$</span>
+  <code class="min-w-0 flex-1 overflow-x-auto whitespace-nowrap py-1.5 [scrollbar-width:none]">{command}</code>
+  <button
+    type="button"
+    class="copy-btn btn btn-ghost shrink-0 !px-2.5 !py-1.5 text-muted hover:text-fg"
+    data-copy={command}
+    aria-label="Copy command"
+  >
+    <Icon name="ph:copy" class="copy-idle size-4" aria-hidden="true" />
+    <Icon name="ph:check" class="copy-done hidden size-4 text-accent" aria-hidden="true" />
+    <span class="copy-label sr-only" aria-live="polite"></span>
+  </button>
+</div>
+
+<script>
+  // One delegated listener for every copy button on the page.
+  document.addEventListener("click", async (event) => {
+    const button = (event.target as Element | null)?.closest<HTMLButtonElement>(".copy-btn");
+    if (!button) return;
+    const text = button.dataset.copy ?? "";
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Clipboard API blocked (http, old browser): select the text instead so a
+      // manual copy is one keystroke away.
+      const code = button.parentElement?.querySelector("code");
+      if (code) window.getSelection()?.selectAllChildren(code);
+      return;
+    }
+    const idle = button.querySelector(".copy-idle");
+    const done = button.querySelector(".copy-done");
+    const label = button.querySelector(".copy-label");
+    idle?.classList.add("hidden");
+    done?.classList.remove("hidden");
+    if (label) label.textContent = "Copied";
+    window.setTimeout(() => {
+      idle?.classList.remove("hidden");
+      done?.classList.add("hidden");
+      if (label) label.textContent = "";
+    }, 1600);
+  });
+</script>

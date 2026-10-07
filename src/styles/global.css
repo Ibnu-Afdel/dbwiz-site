@@ -1,0 +1,154 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+/*
+  Tokens. The page follows the system theme: dark by default (it is a terminal
+  tool, and the screenshots are dark terminals), light under
+  prefers-color-scheme: light. One accent, the DBWiz icon's blue, used for every
+  interactive and highlighted element on the page.
+
+  Shape: containers (screens, panels, code blocks) use --radius-box (12px);
+  controls (buttons, tabs) use --radius-control (8px). Nothing else.
+*/
+:root {
+  --bg: #0e0f15;
+  --surface: #14151d;
+  --surface-2: #1b1c27;
+  --line: #262838;
+  --fg: #e6e8f2;
+  --muted: #9a9eb8;
+  --accent: #7aa2f7;
+  --accent-ink: #0e0f15;
+  --shadow: 0 30px 80px -30px rgb(4 6 20 / 0.8);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef0f7;
+    --line: #dde0eb;
+    --fg: #15161d;
+    --muted: #545a74;
+    --accent: #3451b2;
+    --accent-ink: #ffffff;
+    --shadow: 0 30px 70px -35px rgb(40 52 110 / 0.45);
+    color-scheme: light;
+  }
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --radius-box: 12px;
+  --radius-control: 8px;
+  --shadow-screen: var(--shadow);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  /* Inline code inside copy: commands and flags read as commands. */
+  .prose-inline code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    padding: 0.08em 0.36em;
+    border-radius: 5px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    white-space: nowrap;
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    border-radius: var(--radius-control);
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+    font-size: 0.925rem;
+    transition:
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.2s,
+      border-color 0.2s;
+  }
+  .btn:active {
+    transform: translateY(1px) scale(0.98);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--accent) 88%, var(--fg));
+  }
+  .btn-ghost {
+    border: 1px solid var(--line);
+    color: var(--fg);
+  }
+  .btn-ghost:hover {
+    border-color: color-mix(in srgb, var(--accent) 60%, var(--line));
+  }
+}
+
+/*
+  Motion. Each animation has a job: the hero settles in once so the eye lands on
+  the headline, then the screenshot; sections rise as they enter so the page
+  reads top to bottom. Everything is transform/opacity only and switched off for
+  reduced motion.
+*/
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .enter {
+    animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
